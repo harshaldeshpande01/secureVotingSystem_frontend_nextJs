@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, Alert } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { SettingsNotifications } from '../components/settings/settings-notifications';
 import { SettingsPassword } from '../components/settings/settings-password';
@@ -25,10 +25,16 @@ const Settings = () => (
         >
           Settings
         </Typography>
-        <SettingsNotifications />
+        <Alert 
+          severity="info" 
+          style={{marginBottom: '2em'}}
+        >
+          Page under development. Fully pending!
+        </Alert>
+        {/* <SettingsNotifications />
         <Box sx={{ pt: 3 }}>
           <SettingsPassword />
-        </Box>
+        </Box> */}
       </Container>
     </Box>
   </>

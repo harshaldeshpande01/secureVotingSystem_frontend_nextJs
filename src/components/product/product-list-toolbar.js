@@ -8,9 +8,10 @@ import {
   SvgIcon,
   Typography
 } from '@mui/material';
-import { Download as DownloadIcon } from '../../icons/download';
+
 import { Search as SearchIcon } from '../../icons/search';
-import { Upload as UploadIcon } from '../../icons/upload';
+import NextLink from 'next/link';
+
 
 export const ProductListToolbar = (props) => (
   <Box {...props}>
@@ -27,27 +28,27 @@ export const ProductListToolbar = (props) => (
         sx={{ m: 1 }}
         variant="h4"
       >
-        Products
+        Browse elections
       </Typography>
       <Box sx={{ m: 1 }}>
-        <Button
-          startIcon={(<UploadIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-          Import
-        </Button>
-        <Button
-          startIcon={(<DownloadIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-          Export
-        </Button>
-        <Button
+          <NextLink
+            href="/host"
+            passHref
+          >
+            <Button
+              component="a"
+              color="primary"
+              variant="contained"
+            >
+              Host new election
+            </Button>
+          </NextLink>
+        {/* <Button
           color="primary"
           variant="contained"
         >
-          Add products
-        </Button>
+          Host new election
+        </Button> */}
       </Box>
     </Box>
     <Box sx={{ mt: 3 }}>
@@ -68,7 +69,7 @@ export const ProductListToolbar = (props) => (
                   </InputAdornment>
                 )
               }}
-              placeholder="Search product"
+              placeholder="Search..."
               variant="outlined"
             />
           </Box>

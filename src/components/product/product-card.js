@@ -1,19 +1,18 @@
 import PropTypes from 'prop-types';
-import { Avatar, Box, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { Button, Box, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { Clock as ClockIcon } from '../../icons/clock';
-import { Download as DownloadIcon } from '../../icons/download';
 
-export const ProductCard = ({ product, ...rest }) => (
+export const ProductCard = ({ title, description, phase }) => (
   <Card
     sx={{
       display: 'flex',
       flexDirection: 'column',
       height: '100%'
     }}
-    {...rest}
+    // {...rest}
   >
     <CardContent>
-      <Box
+      {/* <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -25,21 +24,21 @@ export const ProductCard = ({ product, ...rest }) => (
           src={product.media}
           variant="square"
         />
-      </Box>
+      </Box> */}
       <Typography
         align="center"
         color="textPrimary"
         gutterBottom
         variant="h5"
       >
-        {product.title}
+        {title}
       </Typography>
       <Typography
         align="center"
         color="textPrimary"
         variant="body1"
       >
-        {product.description}
+        {description}
       </Typography>
     </CardContent>
     <Box sx={{ flexGrow: 1 }} />
@@ -64,7 +63,7 @@ export const ProductCard = ({ product, ...rest }) => (
             sx={{ pl: 1 }}
             variant="body2"
           >
-            Updated 2hr ago
+            {phase}
           </Typography>
         </Grid>
         <Grid
@@ -74,17 +73,9 @@ export const ProductCard = ({ product, ...rest }) => (
             display: 'flex'
           }}
         >
-          <DownloadIcon color="action" />
-          <Typography
-            color="textSecondary"
-            display="inline"
-            sx={{ pl: 1 }}
-            variant="body2"
-          >
-            {product.totalDownloads}
-            {' '}
-            Downloads
-          </Typography>
+          <Button color='primary'>
+            Learn more
+          </Button>
         </Grid>
       </Grid>
     </Box>
