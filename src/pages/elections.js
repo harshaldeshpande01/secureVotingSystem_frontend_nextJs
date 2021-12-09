@@ -7,7 +7,7 @@ import { DashboardLayout } from '../components/dashboard-layout';
 
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
+const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
 const Products = () => {
   const [elections, setElections] = useState();
