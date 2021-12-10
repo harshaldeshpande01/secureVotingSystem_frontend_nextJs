@@ -1,44 +1,36 @@
-import PropTypes from 'prop-types';
-import { Button, Box, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Divider, Grid, Typography, Skeleton } from '@mui/material';
 import { Clock as ClockIcon } from '../../icons/clock';
 
-export const ProductCard = ({ title, description, phase }) => (
+export const SkeletonCard = () => {
+  return (
   <Card
     sx={{
       display: 'flex',
       flexDirection: 'column',
       height: '100%'
     }}
-    // {...rest}
   >
     <CardContent>
-      {/* <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          pb: 3
-        }}
-      >
-        <Avatar
-          alt="Product"
-          src={product.media}
-          variant="square"
-        />
-      </Box> */}
       <Typography
         align="center"
         color="textPrimary"
         gutterBottom
         variant="h5"
       >
-        {title}
+          <Skeleton 
+            variant="rectangular" 
+            fullWidth
+          />
       </Typography>
       <Typography
         align="center"
         color="textPrimary"
         variant="body1"
       >
-        {description}
+        <Skeleton 
+            variant="rectangular" 
+            fullWidth
+        />
       </Typography>
     </CardContent>
     <Box sx={{ flexGrow: 1 }} />
@@ -63,7 +55,10 @@ export const ProductCard = ({ title, description, phase }) => (
             sx={{ pl: 1 }}
             variant="body2"
           >
-            {phase}
+            <Skeleton 
+            variant="rectangular" 
+            fullWidth
+            />
           </Typography>
         </Grid>
         <Grid
@@ -73,15 +68,12 @@ export const ProductCard = ({ title, description, phase }) => (
             display: 'flex'
           }}
         >
-          <Button color='primary'>
-            Learn more
-          </Button>
+          <Skeleton 
+            variant="rectangular" 
+            fullWidth
+          />
         </Grid>
       </Grid>
     </Box>
   </Card>
-);
-
-ProductCard.propTypes = {
-  product: PropTypes.object.isRequired
-};
+)};

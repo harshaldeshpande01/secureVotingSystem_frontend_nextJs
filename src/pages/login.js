@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Container, Snackbar, Alert, Link, TextField, Typography } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
@@ -15,7 +14,7 @@ const Login = () => {
   const [open, setOpen] = useState();
   const recaptchaRef = useRef();
 
-  const handleClose = (event, reason) => {
+  const handleClose = (_event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -81,7 +80,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | Material Kit</title>
+        <title>Login | secure voting platform</title>
       </Head>
       <Box
         component="main"
@@ -93,17 +92,6 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
-          {/* <NextLink
-            href="/"
-            passHref
-          >
-            <Button
-              component="a"
-              startIcon={<ArrowBackIcon fontSize="small" />}
-            >
-              Dashboard
-            </Button>
-          </NextLink> */}
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
               <Typography

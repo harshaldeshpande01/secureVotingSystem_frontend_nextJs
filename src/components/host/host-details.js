@@ -8,7 +8,6 @@ import {
   Divider,
   Grid,
   TextField,
-  Typography,
   Snackbar,
   Alert
 } from '@mui/material';
@@ -20,20 +19,9 @@ import Web3 from 'web3';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center" sx={{marginTop: '4em'}}>
-      {'Copyright © '}
-        Secure Voting System
-      { new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
-
-export const AccountProfileDetails = (props) => {
+export const CreateElection = (props) => {
   const [loading, setLoading] = useState();
   const [account, setAccount] = useState();
   const [contract, setContract] = useState();
@@ -229,7 +217,7 @@ export const AccountProfileDetails = (props) => {
             type='submit'
             disabled={creating}
           >
-            Create details
+            Create election
           </Button>
         </Box>
       </Card>
@@ -251,8 +239,6 @@ export const AccountProfileDetails = (props) => {
           Hosted successfully!
         </Alert>
       </Snackbar>
-
-      <Copyright/>
     </form>
   );
 };

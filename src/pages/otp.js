@@ -16,7 +16,7 @@ const Login = () => {
   const [open, setOpen] = useState();
   const [error, setError] = useState();
 
-  const handleClose = (event, reason) => {
+  const handleClose = (_event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -124,7 +124,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>OTP | Material Kit</title>
+        <title>OTP verification | secure voting platform</title>
       </Head>
       <Box
         component="main"

@@ -1,13 +1,13 @@
 import Head from 'next/head';
-import { Box, Container, Grid, Typography } from '@mui/material';
-import { AccountProfileDetails } from '../components/host/host-details';
+import { Box, Container, Grid, Typography, Alert } from '@mui/material';
+import { CreateElection } from '../components/host/host-details';
 import { DashboardLayout } from '../components/dashboard-layout';
 
-const Account = () => (
+const Host = () => (
   <>
     <Head>
       <title>
-        Account | Material Kit
+        Host election | secure voting platform
       </title>
     </Head>
     <Box
@@ -24,6 +24,12 @@ const Account = () => (
         >
           Host your election
         </Typography>
+        <Alert 
+          severity="info" 
+          sx={{ width: '100%', height: '100%', marginBottom: '2em' }}
+        >
+          You will need a wallet (like metamask) connected to the right network
+        </Alert>
         <Grid
           container
           spacing={3}
@@ -34,7 +40,7 @@ const Account = () => (
             md={12}
             xs={12}
           >
-            <AccountProfileDetails />
+            <CreateElection />
           </Grid>
         </Grid>
       </Container>
@@ -42,10 +48,10 @@ const Account = () => (
   </>
 );
 
-Account.getLayout = (page) => (
+Host.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default Account;
+export default Host;

@@ -1,30 +1,40 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Box, Container, Grid, Pagination, Alert } from '@mui/material';
-import { ProductListToolbar } from '../components/product/product-list-toolbar';
-import { ProductCard } from '../components/product/product-card';
+import { Box, Container, Grid, Pagination, Alert, Skeleton } from '@mui/material';
+import { ElectionListToolbar } from '../components/election/election-list-toolbar';
+import { ElectionCard } from '../components/election/election-card';
+import { SkeletonCard } from '../components/election/skeleton-card';
 import { DashboardLayout } from '../components/dashboard-layout';
 
 import axios from 'axios';
 
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
-const Products = () => {
+const Elections = () => {
   const [elections, setElections] = useState();
+  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [count, setCount] = useState();
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetchElections(1);
-  }, []);
+    fetchElections(page);
+  }, [page]);
 
   const fetchElections = async(page) => {
     const res = await API.get(`/elections?page=${page}`);
     setElections(res.data.data);
+    setCount(res.data.numberOfPages);
   }
+
+  const handleChange = (_event, value) => {
+    setPage(value);
+  };
+
   return(
   <>
     <Head>
       <title>
-        Products | Material Kit
+        Elections | secure voting platform
       </title>
     </Head>
     <Box
@@ -35,54 +45,50 @@ const Products = () => {
       }}
     >
       <Container maxWidth={false}>
-
-      <Alert 
-        severity="info" 
-        style={{marginBottom: '2em'}}
-      >
-        Page under development. Search, learn more and pagination pending!
-      </Alert>
-        <ProductListToolbar />
+        <ElectionListToolbar />
+        <Alert 
+          severity="info" 
+          style={{marginTop: '2em'}}
+        >
+          Page under development. Search and learn more pending!
+        </Alert>
         <Box sx={{ pt: 3 }}>
           <Grid
             container
             spacing={3}
           >
             {
-                elections &&
+                elections ?
                 elections.map((election, _id) => {
                     return(
                         <Grid 
                           item
-                          key={election.id}
+                          key={election._id}
                           lg={4}
                           md={6}
                           xs={12}
                         >
-                            <ProductCard
-                                title={election.title}
-                                description={election.description}
-                                phase={election.phase}
+                            <ElectionCard
+                              election={election}
                             />
                         </Grid>
                     )
                 })
+                :
+                skeletons.map((s, id) => {
+                  return(
+                    <Grid 
+                      item
+                      key={id}
+                      lg={4}
+                      md={6}
+                      xs={12}
+                    >
+                      <SkeletonCard/>
+                    </Grid>
+                  ) 
+                })
             }
-            {/* { 
-            elections &&
-              elections.map((election) => (
-              <Grid
-                item
-                key={election.id}
-                lg={4}
-                md={6}
-                xs={12}
-              >
-                <ProductCard 
-                 
-                 />
-              </Grid>
-            ))} */}
           </Grid>
         </Box>
         <Box
@@ -94,8 +100,10 @@ const Products = () => {
         >
           <Pagination
             color="primary"
-            count={3}
+            count={count}
             size="small"
+            page={page} 
+            onChange={handleChange}
           />
         </Box>
       </Container>
@@ -103,10 +111,10 @@ const Products = () => {
   </>
 )};
 
-Products.getLayout = (page) => (
+Elections.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default Products;
+export default Elections;

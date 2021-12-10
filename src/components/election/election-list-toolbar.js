@@ -13,7 +13,7 @@ import { Search as SearchIcon } from '../../icons/search';
 import NextLink from 'next/link';
 
 
-export const ProductListToolbar = (props) => (
+export const ElectionListToolbar = (props) => (
   <Box {...props}>
     <Box
       sx={{

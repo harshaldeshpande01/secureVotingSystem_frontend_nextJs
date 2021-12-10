@@ -65,6 +65,7 @@ export const DashboardNavbar = (props) => {
                 badgeContent={4}
                 color="primary"
                 variant="dot"
+                invisible={!(router.pathname === '/elections')}
               >
                   <HomeIcon fontSize="small" />
               </Badge>
