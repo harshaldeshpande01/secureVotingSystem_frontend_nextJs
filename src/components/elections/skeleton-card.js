@@ -57,7 +57,6 @@ export const SkeletonCard = () => {
           >
             <Skeleton 
             variant="rectangular" 
-            fullWidth
             />
           </Typography>
         </Grid>
@@ -70,7 +69,6 @@ export const SkeletonCard = () => {
         >
           <Skeleton 
             variant="rectangular" 
-            fullWidth
           />
         </Grid>
       </Grid>

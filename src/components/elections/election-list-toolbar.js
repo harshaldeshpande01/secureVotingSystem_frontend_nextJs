@@ -43,12 +43,6 @@ export const ElectionListToolbar = (props) => (
               Host new election
             </Button>
           </NextLink>
-        {/* <Button
-          color="primary"
-          variant="contained"
-        >
-          Host new election
-        </Button> */}
       </Box>
     </Box>
     <Box sx={{ mt: 3 }}>

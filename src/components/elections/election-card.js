@@ -1,8 +1,11 @@
 import { Button, Box, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { Clock as ClockIcon } from '../../icons/clock';
 
+import NextLink from 'next/link';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 export const ElectionCard = (props) => {
-  const { title, description, phase } = props.election;
+  const { _id, title, description, phase } = props.election;
 
   return (
   <Card
@@ -75,9 +78,17 @@ export const ElectionCard = (props) => {
             display: 'flex'
           }}
         >
-          <Button color='primary'>
-            Learn more
-          </Button>
+          <NextLink
+            href={`/election/${_id}`}
+            passHref
+          >
+            <Button
+              component="a"
+              // startIcon={<ArrowBackIcon fontSize="small" />}
+            >
+              Learn more
+            </Button>
+          </NextLink>
         </Grid>
       </Grid>
     </Box>

@@ -54,7 +54,7 @@ export const DashboardNavbar = (props) => {
           <Box sx={{ flexGrow: 1 }} />
           <Tooltip title="Home">
             <NextLink
-              href="/elections"
+              href="/elections?page=1"
               passHref
             >
             <IconButton 
