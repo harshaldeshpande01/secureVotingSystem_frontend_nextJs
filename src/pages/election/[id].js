@@ -77,38 +77,38 @@ Election.getLayout = (page) => (
   </DashboardLayout>
 );
 
-export const getStaticProps = async (context) => {
-    const res = await API.get(`/elections/${context.params.id}`);
-    return {
-      props: {
-        data: res.data.election,
-      },
-    }
-}
-
-export const getStaticPaths = async () => {
-  const res = await API.get(`/elections/all`);
-  const articles = await res.data.data;
-
-  const ids = articles.map((article) => article._id)
-  const paths = ids.map((id) => ({ params: { id: id.toString() } }))
-
-  return {
-    paths,
-    fallback: true,
-  }
-}
-
-// export const getServerSideProps = async (context) => {
+// export const getStaticProps = async (context) => {
 //     const res = await API.get(`/elections/${context.params.id}`);
-//     const res2 = await API.get(`/elections/all`);
-//     console.log(res2)
 //     return {
 //       props: {
 //         data: res.data.election,
 //       },
 //     }
 // }
+
+// export const getStaticPaths = async () => {
+//   const res = await API.get(`/elections/all`);
+//   const articles = await res.data.data;
+
+//   const ids = articles.map((article) => article._id)
+//   const paths = ids.map((id) => ({ params: { id: id.toString() } }))
+
+//   return {
+//     paths,
+//     fallback: true,
+//   }
+// }
+
+export const getServerSideProps = async (context) => {
+    const res = await API.get(`/elections/${context.params.id}`);
+    const res2 = await API.get(`/elections/all`);
+    console.log(res2)
+    return {
+      props: {
+        data: res.data.election,
+      },
+    }
+}
 
 
 export default Election;
