@@ -45,13 +45,12 @@ export const CreateElection = (props) => {
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
 
     const accounts = await web3.eth.getAccounts()
-    // console.log(accounts[0]);
+    console.log(accounts[0]);
     setAccount(accounts[0])
     
     const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS)
     setContract(contract);
-
-    // console.log(contract)
+    console.log(contract)
     }
     catch (err) {
       console.log(err)

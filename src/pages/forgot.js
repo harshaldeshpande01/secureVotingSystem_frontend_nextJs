@@ -1,17 +1,18 @@
 import { useState, useRef } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Container, Snackbar, Alert, Link, TextField, Typography , Stack} from '@mui/material';
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
-const Login = () => {
-  const router = useRouter();
+const Forgot = () => {
   const [loading, setLoading] = useState();
   const [open, setOpen] = useState();
+//   const [error, setError] = useState();
+//   const [message, setMessage] = useState();
   const recaptchaRef = useRef();
 
   const handleClose = (_event, reason) => {
@@ -23,7 +24,7 @@ const Login = () => {
 
   const handleSubmit = async (values) => {
     setLoading(true);
-    const {email, password} = values;
+    const { email } = values;
     const config = {
       header: {
         "Content-Type": "application/json",
@@ -32,31 +33,29 @@ const Login = () => {
 
     const captchaToken = await recaptchaRef.current.executeAsync();
     recaptchaRef.current.reset();
-    
+  
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_AUTH_LEVEL1}/login`,
+        `${process.env.NEXT_PUBLIC_AUTH_LEVEL1}/forgotPassword`,
         { 
-          email, 
-          password, 
-          captchaToken 
+          email,
+          captchaToken
         },
         config
       );
       setLoading(false);
-      localStorage.setItem("accessToken", res.data.token);
-      router.push('/otp');
+    //   setMessage('Please check your inbox for furthur steps');
+      setOpen(true);
     } catch (error) {
+      console.log(error)
       setLoading(false);
       setOpen(true);
     }
-    setLoading(false);
   }
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: ''
+      email: ''
     },
     validationSchema: Yup.object({
       email: Yup
@@ -65,12 +64,7 @@ const Login = () => {
           'Must be a valid email')
         .max(255)
         .required(
-          'Email is required'),
-      password: Yup
-        .string()
-        .max(255)
-        .required(
-          'Password is required')
+          'Email is required')
     }),
     onSubmit: (values) => {
       handleSubmit(values);
@@ -80,7 +74,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | secure voting platform</title>
+        <title>Forgot password | secure voting platform</title>
       </Head>
       <Box
         component="main"
@@ -98,14 +92,14 @@ const Login = () => {
                 color="textPrimary"
                 variant="h4"
               >
-                Sign in
+                Forgot password
               </Typography>
               <Typography
                 color="textSecondary"
                 gutterBottom
                 variant="body2"
               >
-                Sign in to the secure voting platform
+                Enter your email address to continue
               </Typography>
             </Box>
             <TextField
@@ -121,38 +115,6 @@ const Login = () => {
               value={formik.values.email}
               variant="outlined"
             />
-            <TextField
-              error={Boolean(formik.touched.password && formik.errors.password)}
-              fullWidth
-              helperText={formik.touched.password && formik.errors.password}
-              label="Password"
-              margin="normal"
-              name="password"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="password"
-              value={formik.values.password}
-              variant="outlined"
-            />
-            <Stack 
-              direction="row" 
-              justifyContent="end"
-            >
-              <NextLink
-                href="/forgot"
-              >
-                <Link
-                  to="/forgot"
-                  variant="subtitle2"
-                  underline="hover"
-                  sx={{
-                    cursor: 'pointer'
-                  }}
-                >
-                  Forgot password?
-                </Link>
-              </NextLink>
-            </Stack>
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
@@ -162,30 +124,23 @@ const Login = () => {
                 type="submit"
                 variant="contained"
               >
-                Sign In Now
+                Send reset link
               </Button>
             </Box>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              Don&apos;t have an account?
-              {' '}
               <NextLink
-                href="/register"
+                href="/login"
               >
                 <Link
-                  to="/register"
+                  to="/login"
                   variant="subtitle2"
                   underline="hover"
                   sx={{
                     cursor: 'pointer'
                   }}
                 >
-                  Sign Up
+                  Back to Login
                 </Link>
               </NextLink>
-            </Typography>
           </form>
           <ReCAPTCHA
               ref={recaptchaRef}
@@ -205,10 +160,10 @@ const Login = () => {
       >
         <Alert 
           onClose={handleClose} 
-          severity="error" 
+          severity="success" 
           sx={{ width: '100%', height: '100%' }}
         >
-          Invalid username or password!
+            Please check your inbox for furthur steps
         </Alert>
       </Snackbar>
 
@@ -218,4 +173,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Forgot;

@@ -1,6 +1,7 @@
+import { useState, useRef } from 'react'
+
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -11,18 +12,75 @@ import {
   FormHelperText,
   Link,
   TextField,
-  Typography
+  Typography,
+  Alert,
+  Snackbar
 } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+import ReCAPTCHA from "react-google-recaptcha";
+import axios from "axios";
 
 const Register = () => {
-  const router = useRouter();
+  const [loading, setLoading] = useState()
+  const recaptchaRef = useRef();
+  const [open, setOpen] = useState();
+  const [error, setError] = useState();
+
+  const handleClose = (_event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
+  const registerUser = async (values) => {
+    setLoading(true);
+    const { email, phone, password } = values;
+    let temp=phone;
+    if(temp[0] === '+') {
+      temp = temp.substring(1);
+    }
+    if(temp.length === 10){
+      temp = "91" + temp;
+    }
+
+    const config = {
+      header: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const captchaToken = await recaptchaRef.current.executeAsync();
+    recaptchaRef.current.reset();
+  
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_AUTH_LEVEL1}/register`,
+        { 
+          email, 
+          password, 
+          phone: temp,
+          captchaToken 
+        },
+        config
+      );
+      setLoading(false);
+      console.log(res.data.data);
+      setError('');
+      setOpen(true)
+    } catch (error) {
+      setLoading(false);
+      console.log(error.response.data)
+      setError(error.response.data)
+      setOpen(true)
+    }
+  }
+
   const formik = useFormik({
     initialValues: {
       email: '',
-      firstName: '',
-      lastName: '',
       password: '',
+      phone: '',
       policy: false
     },
     validationSchema: Yup.object({
@@ -33,21 +91,16 @@ const Register = () => {
         .max(255)
         .required(
           'Email is required'),
-      firstName: Yup
-        .string()
-        .max(255)
-        .required(
-          'First name is required'),
-      lastName: Yup
-        .string()
-        .max(255)
-        .required(
-          'Last name is required'),
       password: Yup
         .string()
+        .min(6)
         .max(255)
         .required(
           'Password is required'),
+      phone: Yup
+        .string()
+        .matches(/^[6-9]\d{9}$/, {message: "Please enter valid number."})
+        .required('Required'),
       policy: Yup
         .boolean()
         .oneOf(
@@ -55,8 +108,8 @@ const Register = () => {
           'This field must be checked'
         )
     }),
-    onSubmit: () => {
-      router.push('/');
+    onSubmit: (values) => {
+      registerUser(values)
     }
   });
 
@@ -83,7 +136,7 @@ const Register = () => {
                 color="textPrimary"
                 variant="h4"
               >
-                Create a new account (under development)
+                Create a new account
               </Typography>
               <Typography
                 color="textSecondary"
@@ -93,30 +146,6 @@ const Register = () => {
                 Use your email to create a new account
               </Typography>
             </Box>
-            <TextField
-              error={Boolean(formik.touched.firstName && formik.errors.firstName)}
-              fullWidth
-              helperText={formik.touched.firstName && formik.errors.firstName}
-              label="First Name"
-              margin="normal"
-              name="firstName"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.firstName}
-              variant="outlined"
-            />
-            <TextField
-              error={Boolean(formik.touched.lastName && formik.errors.lastName)}
-              fullWidth
-              helperText={formik.touched.lastName && formik.errors.lastName}
-              label="Last Name"
-              margin="normal"
-              name="lastName"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.lastName}
-              variant="outlined"
-            />
             <TextField
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
@@ -141,6 +170,19 @@ const Register = () => {
               onChange={formik.handleChange}
               type="password"
               value={formik.values.password}
+              variant="outlined"
+            />
+            <TextField
+              error={Boolean(formik.touched.phone && formik.errors.phone)}
+              fullWidth
+              helperText={formik.touched.phone && formik.errors.phone}
+              label="Phone number"
+              margin="normal"
+              name="phone"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              type="text"
+              value={formik.values.phone}
               variant="outlined"
             />
             <Box
@@ -183,7 +225,7 @@ const Register = () => {
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
-                disabled={formik.isSubmitting}
+                disabled={loading}
                 fullWidth
                 size="large"
                 type="submit"
@@ -211,7 +253,41 @@ const Register = () => {
               </NextLink>
             </Typography>
           </form>
+          <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+              size="invisible"
+              badge='bottomleft'
+          />
         </Container>
+        <Snackbar 
+          open={open} 
+          autoHideDuration={6000} 
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
+        >
+          {
+            error?
+            <Alert 
+              onClose={handleClose} 
+              severity="error" 
+              sx={{ width: '100%', height: '100%' }}
+            >
+              {error}
+            </Alert>
+            :
+            <Alert 
+              onClose={handleClose} 
+              severity="success" 
+              sx={{ width: '100%', height: '100%' }}
+            >
+              Check your inbox for email verification!
+            </Alert>
+          }
+        </Snackbar>
       </Box>
     </>
   );

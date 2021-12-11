@@ -1,4 +1,5 @@
-export const CONTRACT_ADDRESS = '0x64dCa0e81d0451775e3d11C321190cFa44B7D233'
+export const CONTRACT_ADDRESS = '0x182Dc6ca6b5cf91f68BDFE9d6c114d265e567D44'
+// '0x64dCa0e81d0451775e3d11C321190cFa44B7D233'
 
 export const SINGLE_CONTRACT_ABI = [
   {
@@ -203,7 +204,7 @@ export const CONTRACT_ABI = [
     "inputs": [
       {
         "internalType": "string[]",
-        "name": "candList",
+        "name": "initList",
         "type": "string[]"
       },
       {

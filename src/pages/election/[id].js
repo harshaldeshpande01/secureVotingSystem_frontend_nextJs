@@ -1,4 +1,3 @@
-import Link from 'next/link'
 // import { useRouter } from 'next/router'
 
 import axios from 'axios';
@@ -9,7 +8,7 @@ import { Box, Container, Grid, Typography, Button } from '@mui/material';
 import { CreateElection } from '../../components/election/election-details';
 import { DashboardLayout } from '../../components/dashboard-layout';
 
-import NextLink from 'next/link';
+import Link from 'next/link';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Election = ({data}) => (
@@ -27,7 +26,7 @@ const Election = ({data}) => (
       }}
     >
       <Container maxWidth="lg">
-          <NextLink
+          <Link
             href="/elections?page=1"
             passHref
           >
@@ -38,7 +37,7 @@ const Election = ({data}) => (
             >
               Go back
             </Button>
-          </NextLink>
+          </Link>
         <Typography
           variant="h4"
           sx={{ml: 3}}
@@ -78,30 +77,7 @@ Election.getLayout = (page) => (
   </DashboardLayout>
 );
 
-// export const getStaticProps = async (context) => {
-//     const res = await API.get(`/elections/${context.params.id}`);
-//     return {
-//       props: {
-//         data: res.data.election,
-//       },
-//     }
-// }
-
-// export const getStaticPaths = async () => {
-//     const res = await API.get(`/elections?page=1`);
-
-//   const articles = await res.data.data;
-
-//   const ids = articles.map((article) => article._id)
-//   const paths = ids.map((id) => ({ params: { id: id.toString() } }))
-
-//   return {
-//     paths,
-//     fallback: true,
-//   }
-// }
-
-export const getServerSideProps = async (context) => {
+export const getStaticProps = async (context) => {
     const res = await API.get(`/elections/${context.params.id}`);
     return {
       props: {
@@ -109,6 +85,30 @@ export const getServerSideProps = async (context) => {
       },
     }
 }
+
+export const getStaticPaths = async () => {
+  const res = await API.get(`/elections/all`);
+  const articles = await res.data.data;
+
+  const ids = articles.map((article) => article._id)
+  const paths = ids.map((id) => ({ params: { id: id.toString() } }))
+
+  return {
+    paths,
+    fallback: true,
+  }
+}
+
+// export const getServerSideProps = async (context) => {
+//     const res = await API.get(`/elections/${context.params.id}`);
+//     const res2 = await API.get(`/elections/all`);
+//     console.log(res2)
+//     return {
+//       props: {
+//         data: res.data.election,
+//       },
+//     }
+// }
 
 
 export default Election;

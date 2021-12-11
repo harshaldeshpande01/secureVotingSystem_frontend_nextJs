@@ -8,10 +8,11 @@ import { Box, Button, Container, Snackbar, Alert, Link, TextField, Typography , 
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
-const Login = () => {
+const Forgot = () => {
   const router = useRouter();
   const [loading, setLoading] = useState();
   const [open, setOpen] = useState();
+  const [error, setError] = useState();
   const recaptchaRef = useRef();
 
   const handleClose = (_event, reason) => {
@@ -22,51 +23,47 @@ const Login = () => {
   };
 
   const handleSubmit = async (values) => {
+    const {password} = values;
+
     setLoading(true);
-    const {email, password} = values;
+    
     const config = {
       header: {
         "Content-Type": "application/json",
       },
     };
 
-    const captchaToken = await recaptchaRef.current.executeAsync();
-    recaptchaRef.current.reset();
-    
+  const captchaToken = await recaptchaRef.current.executeAsync();
+  recaptchaRef.current.reset();
+
+  const token = router.query.token;
+
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_AUTH_LEVEL1}/login`,
-        { 
-          email, 
-          password, 
-          captchaToken 
+      const { data } = await axios.put(
+        `${process.env.NEXT_PUBLIC_AUTH_LEVEL1}/passwordreset/${token}`,
+        {
+          password,
+          captchaToken
         },
         config
       );
       setLoading(false);
-      localStorage.setItem("accessToken", res.data.token);
-      router.push('/otp');
+      setOpen(true);
     } catch (error) {
       setLoading(false);
+      setError(error.response.data)
       setOpen(true);
     }
-    setLoading(false);
+    
+    return true;
   }
 
   const formik = useFormik({
     initialValues: {
-      email: '',
       password: ''
     },
     validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email(
-          'Must be a valid email')
-        .max(255)
-        .required(
-          'Email is required'),
-      password: Yup
+        password: Yup
         .string()
         .max(255)
         .required(
@@ -80,7 +77,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | secure voting platform</title>
+        <title>Reset password | secure voting platform</title>
       </Head>
       <Box
         component="main"
@@ -98,34 +95,21 @@ const Login = () => {
                 color="textPrimary"
                 variant="h4"
               >
-                Sign in
+                Reset password
               </Typography>
               <Typography
                 color="textSecondary"
                 gutterBottom
                 variant="body2"
               >
-                Sign in to the secure voting platform
+                Set new password for your account
               </Typography>
             </Box>
-            <TextField
-              error={Boolean(formik.touched.email && formik.errors.email)}
-              fullWidth
-              helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
-              margin="normal"
-              name="email"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="email"
-              value={formik.values.email}
-              variant="outlined"
-            />
             <TextField
               error={Boolean(formik.touched.password && formik.errors.password)}
               fullWidth
               helperText={formik.touched.password && formik.errors.password}
-              label="Password"
+              label="New password"
               margin="normal"
               name="password"
               onBlur={formik.handleBlur}
@@ -134,25 +118,6 @@ const Login = () => {
               value={formik.values.password}
               variant="outlined"
             />
-            <Stack 
-              direction="row" 
-              justifyContent="end"
-            >
-              <NextLink
-                href="/forgot"
-              >
-                <Link
-                  to="/forgot"
-                  variant="subtitle2"
-                  underline="hover"
-                  sx={{
-                    cursor: 'pointer'
-                  }}
-                >
-                  Forgot password?
-                </Link>
-              </NextLink>
-            </Stack>
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
@@ -162,30 +127,23 @@ const Login = () => {
                 type="submit"
                 variant="contained"
               >
-                Sign In Now
+                Reset password
               </Button>
             </Box>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              Don&apos;t have an account?
-              {' '}
               <NextLink
-                href="/register"
+                href="/login"
               >
                 <Link
-                  to="/register"
+                  to="/login"
                   variant="subtitle2"
                   underline="hover"
                   sx={{
                     cursor: 'pointer'
                   }}
                 >
-                  Sign Up
+                  Back to Login
                 </Link>
               </NextLink>
-            </Typography>
           </form>
           <ReCAPTCHA
               ref={recaptchaRef}
@@ -202,14 +160,25 @@ const Login = () => {
           vertical: "top",
           horizontal: "right"
         }}
-      >
-        <Alert 
-          onClose={handleClose} 
-          severity="error" 
-          sx={{ width: '100%', height: '100%' }}
-        >
-          Invalid username or password!
-        </Alert>
+      > 
+        {
+            error?
+            <Alert 
+                onClose={handleClose} 
+                severity="error" 
+                sx={{ width: '100%', height: '100%' }}
+            >
+                {error}
+            </Alert>
+            :
+            <Alert 
+                onClose={handleClose} 
+                severity="success" 
+                sx={{ width: '100%', height: '100%' }}
+                >
+                Password update success
+            </Alert>
+        }
       </Snackbar>
 
         </Container>
@@ -218,4 +187,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Forgot;

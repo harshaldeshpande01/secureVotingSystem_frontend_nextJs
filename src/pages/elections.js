@@ -9,13 +9,45 @@ import { DashboardLayout } from '../components/dashboard-layout';
 import axios from 'axios';
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
+import { useEffect, useState } from 'react';
+import Router from 'next/router';
+import NProgress from 'nprogress';
+
+NProgress.configure({ showSpinner: false });
+
 const Elections = ({elections, count, current}) => {
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (_event, value) => {
     router.push(`/elections?page=${value}`)
   };
+
+  useEffect(() => {
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
+
+    const start = () => {
+      console.log('start');
+      NProgress.start();
+      setLoading(true);
+    };
+    const end = () => {
+      console.log('findished');
+      NProgress.done();
+      setLoading(false);
+    };
+
+    Router.events.on('routeChangeStart', start);
+    Router.events.on('routeChangeComplete', end);
+    Router.events.on('routeChangeError', end);
+    return () => {
+      Router.events.off('routeChangeStart', start);
+      Router.events.off('routeChangeComplete', end);
+      Router.events.off('routeChangeError', end);
+    };
+  }, []);
 
   return(
   <>
