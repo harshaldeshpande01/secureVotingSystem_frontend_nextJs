@@ -8,6 +8,8 @@ import { Box, Button, Container, Snackbar, Alert, Link, TextField, Typography , 
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
+import withAuth from '../hoc/withAuth'
+
 const Login = () => {
   const router = useRouter();
   const [loading, setLoading] = useState();
@@ -218,4 +220,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withAuth(Login);

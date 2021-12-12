@@ -8,11 +8,11 @@ import { User as UserIcon } from '../icons/user';
 import { NavItem } from './nav-item';
 
 const items = [
-  // {
-  //   href: '/elections?page=1',
-  //   icon: (<ShoppingBagIcon fontSize="small" />),
-  //   title: 'Elections'
-  // },
+  {
+    href: '/elections',
+    icon: (<ShoppingBagIcon fontSize="small" />),
+    title: 'Elections'
+  },
   {
     href: '/host',
     icon: (<ShoppingBagIcon fontSize="small" />),

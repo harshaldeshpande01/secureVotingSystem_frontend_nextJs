@@ -1,17 +1,32 @@
-// import { useRouter } from 'next/router'
+import Head from 'next/head';
+import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
+import { Box, Container, Grid, Typography, Button, Skeleton } from '@mui/material';
+import { CreateElection } from '../../components/election/election-details';
+import { SkeletonCard } from '../../components/election/skeleton-card';
+import { DashboardLayout } from '../../components/dashboard-layout';
 
 import axios from 'axios';
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
-import Head from 'next/head';
-import { Box, Container, Grid, Typography, Button } from '@mui/material';
-import { CreateElection } from '../../components/election/election-details';
-import { DashboardLayout } from '../../components/dashboard-layout';
-
 import Link from 'next/link';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const Election = ({data}) => (
+const Election = () =>  {
+  const [data, setData] = useState();
+  const router = useRouter();
+
+  useEffect(() => {
+    if(!router.isReady) return;
+    fetchData(router.query.id);
+  }, [router.isReady]);
+
+  const fetchData = async(eid) => {
+    const res = await API.get(`/elections/${eid}`);
+    setData(res.data.election);
+  }
+
+  return (
   <>
     <Head>
       <title>
@@ -27,7 +42,7 @@ const Election = ({data}) => (
     >
       <Container maxWidth="lg">
           <Link
-            href="/elections?page=1"
+            href="/elections"
             passHref
           >
             <Button
@@ -40,14 +55,28 @@ const Election = ({data}) => (
           </Link>
         <Typography
           variant="h4"
-          sx={{ml: 3}}
+          sx={{ml: 3, mb: 1}}
         >
-          {data.title}
+          {data ? 
+            data.title
+            :
+            <Skeleton 
+              variant="rectangular" 
+              width={100}
+            />
+          }
         </Typography>
         <Typography
             sx={{ml: 3}}
         >
-          {data._id}
+          {data ? 
+            data._id
+            :
+            <Skeleton 
+              variant="rectangular" 
+              width={200}
+            />
+          }
         </Typography>
         <br/>
         <Grid
@@ -59,17 +88,22 @@ const Election = ({data}) => (
             lg={12}
             md={12}
             xs={12}
-          >
-            <CreateElection 
-                candidates={data.candidates} 
+          > 
+            {
+              data ? 
+              <CreateElection 
+                candidates={ data.candidates} 
                 _id={data._id} 
-            />
+              />
+              :
+              <SkeletonCard />
+            }
           </Grid>
         </Grid>
       </Container>
     </Box>
   </>
-);
+)};
 
 Election.getLayout = (page) => (
   <DashboardLayout>
@@ -99,16 +133,14 @@ Election.getLayout = (page) => (
 //   }
 // }
 
-export const getServerSideProps = async (context) => {
-    const res = await API.get(`/elections/${context.params.id}`);
-    const res2 = await API.get(`/elections/all`);
-    console.log(res2)
-    return {
-      props: {
-        data: res.data.election,
-      },
-    }
-}
+// export const getServerSideProps = async (context) => {
+//     const res = await API.get(`/elections/${context.params.id}`);
+//     return {
+//       props: {
+//         data: res.data.election,
+//       },
+//     }
+// }
 
 
 export default Election;

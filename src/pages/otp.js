@@ -64,6 +64,14 @@ const Login = () => {
   }
 
   useEffect(() => {
+    // const at = localStorage.getItem("accessToken");
+    // if(!at) {
+    //   localStorage.clear();
+    //   router.push('/login');
+    // }
+    // if(at && jwt_decode(token).authLevel2) {
+    //   router.push('/elections');
+    // }
     sendOTP();
   }, [])
 

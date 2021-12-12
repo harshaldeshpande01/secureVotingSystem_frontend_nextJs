@@ -8,6 +8,8 @@ import { Box, Button, Container, Snackbar, Alert, Link, TextField, Typography , 
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
+import withAuth from '../../hoc/withAuth'
+
 const Forgot = () => {
   const router = useRouter();
   const [loading, setLoading] = useState();
@@ -187,4 +189,4 @@ const Forgot = () => {
   );
 };
 
-export default Forgot;
+export default withAuth(Forgot);

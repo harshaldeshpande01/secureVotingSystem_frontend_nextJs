@@ -12,6 +12,8 @@ import {
   CircularProgress
 } from '@mui/material';
 
+import withAuth from '../../hoc/withAuth'
+
 const Confirm = React.memo(() => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -95,4 +97,4 @@ const Confirm = React.memo(() => {
   );
 })
 
-export default Confirm;
+export default withAuth(Confirm);

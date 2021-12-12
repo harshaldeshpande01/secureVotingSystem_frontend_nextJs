@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
 
+import withAuth2 from '../hoc/withAuth2'
+
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
   flex: '1 1 auto',
@@ -14,7 +16,7 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   }
 }));
 
-export const DashboardLayout = (props) => {
+export const DashboardLayout = withAuth2((props) => {
   const { children } = props;
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
@@ -39,4 +41,4 @@ export const DashboardLayout = (props) => {
       />
     </>
   );
-};
+});

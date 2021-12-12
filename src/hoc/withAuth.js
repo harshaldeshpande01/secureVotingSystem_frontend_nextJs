@@ -12,11 +12,15 @@ const withAuth = (WrappedComponent) => {
 
       // If there is no access token we redirect to "/" page.
       if (!accessToken) {
-        Router.replace("/login");
+        return <WrappedComponent {...props} />;
+      }
+      else if (accessToken && jwt_decode(accessToken).authLevel2) {
+        Router.replace("/elections");
         return null;
       }
-      else if (jwt_decode(accessToken).authLevel2) {
-        return <WrappedComponent {...props} />;
+      else if (accessToken && jwt_decode(accessToken).authLevel1) {
+        Router.replace("/otp");
+        return null;
       }
     }
 

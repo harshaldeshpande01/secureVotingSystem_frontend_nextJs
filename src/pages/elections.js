@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router'
+
 import { Box, Container, Grid, Pagination, Alert, Skeleton } from '@mui/material';
 import { ElectionListToolbar } from '../components/elections/election-list-toolbar';
 import { ElectionCard } from '../components/elections/election-card';
@@ -10,46 +11,38 @@ import axios from 'axios';
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
 import { useEffect, useState } from 'react';
-import Router from 'next/router';
-import NProgress from 'nprogress';
 
-NProgress.configure({ showSpinner: false });
-
-const Elections = ({elections, count, current}) => {
-  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const [loading, setLoading] = useState(false);
+const Elections = () => {
   const router = useRouter();
-
-  const handleChange = (_event, value) => {
-    router.push(`/elections?page=${value}`)
-  };
+  const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [elections, setElections] = useState();
+  const [count, setCount] = useState();
+  const [current, setCurrent] = useState(1);
 
   useEffect(() => {
-    const jssStyles = document.querySelector('#jss-server-side');
-    if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
-
-    const start = () => {
-      console.log('start');
-      NProgress.start();
-      setLoading(true);
-    };
-    const end = () => {
-      console.log('findished');
-      NProgress.done();
-      setLoading(false);
-    };
-
-    Router.events.on('routeChangeStart', start);
-    Router.events.on('routeChangeComplete', end);
-    Router.events.on('routeChangeError', end);
-    return () => {
-      Router.events.off('routeChangeStart', start);
-      Router.events.off('routeChangeComplete', end);
-      Router.events.off('routeChangeError', end);
-    };
+    const at = localStorage.getItem("accessToken");
+    if(!at) {
+      localStorage.clear();
+      router.push('/login');
+    }
+    fetchElections(1);
   }, []);
 
+  const fetchElections = async(page) => {
+    const res = await API.get(`/elections?page=${page}`);
+    setElections(res.data.data);
+    setCount(res.data.numberOfPages);
+  }
+
+  const handleChange = (_event, value) => {
+    setCurrent(value)
+    fetchElections(value)
+  };
+
   return(
+  // <>
+  // {
+  //   render &&
   <>
     <Head>
       <title>
@@ -128,6 +121,8 @@ const Elections = ({elections, count, current}) => {
       </Container>
     </Box>
   </>
+  // }
+  // </>
 )};
 
 Elections.getLayout = (page) => (
@@ -138,17 +133,17 @@ Elections.getLayout = (page) => (
 
 export default Elections;
 
-export async function getServerSideProps(context) {
-  const page = context.query.page; 
-  const res = await API.get(`/elections?page=${page}`);
-  const elections = res.data.data
-  const count = res.data.numberOfPages
+// export async function getServerSideProps(context) {
+//   const page = context.query.page; 
+//   const res = await API.get(`/elections?page=${page}`);
+//   const elections = res.data.data
+//   const count = res.data.numberOfPages
 
-  return {
-    props: {
-      elections,
-      count,
-      current: page
-    },
-  }
-}
+//   return {
+//     props: {
+//       elections,
+//       count,
+//       current: page
+//     },
+//   }
+// }

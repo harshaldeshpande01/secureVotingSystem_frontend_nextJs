@@ -5,7 +5,7 @@ const Dashboard = () => (
   <>
     <Head>
       <title>
-        Dashboard | Material Kit
+        Dashboard | secure voting system
       </title>
     </Head>
   </>

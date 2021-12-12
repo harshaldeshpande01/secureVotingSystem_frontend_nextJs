@@ -20,6 +20,8 @@ import {
 import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
+import withAuth from '../hoc/withAuth'
+
 const Register = () => {
   const [loading, setLoading] = useState()
   const recaptchaRef = useRef();
@@ -293,4 +295,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default withAuth(Register);
