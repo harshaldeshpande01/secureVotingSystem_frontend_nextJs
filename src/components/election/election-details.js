@@ -33,6 +33,29 @@ export const CreateElection = ({_id, candidates}) => {
     setSelected(event.target.value);
   };
 
+  const newf = async() => {
+    try {
+      const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
+
+      const accounts = await web3.eth.getAccounts()
+      
+      const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS)
+
+      const electionContractAddr = await contract.methods.deployedElections(_id).call();
+
+      const electionContract = new web3.eth.Contract(SINGLE_CONTRACT_ABI, electionContractAddr);
+
+      let temp = await electionContract.methods.candidates(1).call();
+      console.log(temp)
+
+      temp = await electionContract.methods.candidates(2).call();
+      console.log(temp)
+
+    }catch(err) {
+      console.log(err)
+    }
+  }
+
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -54,7 +77,10 @@ export const CreateElection = ({_id, candidates}) => {
 
       const electionContract = new web3.eth.Contract(SINGLE_CONTRACT_ABI, electionContractAddr);
 
-      await electionContract.methods.vote(candidates.indexOf(selected))
+      const temp = await electionContract.methods.candidates(1).call();
+      console.log(temp)
+
+      await electionContract.methods.vote((candidates.indexOf(selected) + 1))
       .send({
         from: accounts[0], 
         gas: '5000000'
@@ -152,6 +178,9 @@ export const CreateElection = ({_id, candidates}) => {
             </Alert>
           }
         </Snackbar>
+        <Button onClick={() => newf()}>
+          Get data
+        </Button>
       </Card>
   );
 };

@@ -73,7 +73,7 @@ export const CreateElection = (props) => {
         candidates: _candidates
     });
     console.log(res.data._id);
-    await contract.methods.createElection(_candidates, description, title, res.data._id)
+    await contract.methods.createElection(_candidates.length, res.data._id)
     .send({
       from: account, 
       gas: '5000000'
