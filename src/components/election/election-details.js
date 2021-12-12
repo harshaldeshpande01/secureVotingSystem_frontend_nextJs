@@ -37,7 +37,8 @@ export const CreateElection = ({_id, candidates}) => {
     try {
       const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
 
-      const accounts = await web3.eth.getAccounts()
+      // await window.ethereum.enable();
+      // const accounts = await web3.eth.getAccounts()
       
       const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS)
 
@@ -69,6 +70,7 @@ export const CreateElection = ({_id, candidates}) => {
     try {
       const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
 
+      await window.ethereum.enable();
       const accounts = await web3.eth.getAccounts()
       
       const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS)

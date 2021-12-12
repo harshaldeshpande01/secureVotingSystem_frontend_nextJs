@@ -44,6 +44,7 @@ export const CreateElection = (props) => {
     try {
     const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
 
+    await window.ethereum.enable();
     const accounts = await web3.eth.getAccounts()
     console.log(accounts[0]);
     setAccount(accounts[0])
