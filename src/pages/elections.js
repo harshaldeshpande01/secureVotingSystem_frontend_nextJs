@@ -29,7 +29,18 @@ const Elections = () => {
   }, []);
 
   const fetchElections = async(page) => {
-    const res = await API.get(`/elections?page=${page}`);
+    let token = localStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    };
+
+    const res = await API.get(
+      `/elections?page=${page}`,
+      config
+    );
     setElections(res.data.data);
     setCount(res.data.numberOfPages);
   }

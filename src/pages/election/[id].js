@@ -1,10 +1,11 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import { Box, Container, Grid, Typography, Button, Skeleton } from '@mui/material';
+import { Box, Container, Grid, Typography, Button, Skeleton, Alert } from '@mui/material';
 import { CreateElection } from '../../components/election/election-details';
 import { SkeletonCard } from '../../components/election/skeleton-card';
 import { DashboardLayout } from '../../components/dashboard-layout';
+import jwt_decode from "jwt-decode";
 
 import axios from 'axios';
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
@@ -14,6 +15,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Election = () =>  {
   const [data, setData] = useState();
+  const [ admin, setAdmin ] = useState();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,8 +24,19 @@ const Election = () =>  {
   }, [router.isReady]);
 
   const fetchData = async(eid) => {
-    const res = await API.get(`/elections/${eid}`);
+    let token = localStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    };
+    const res = await API.get(
+      `/elections/${eid}`,
+      config
+    );
     setData(res.data.election);
+    setAdmin(res.data.isAdmin)
   }
 
   return (
@@ -67,7 +80,7 @@ const Election = () =>  {
           }
         </Typography>
         <Typography
-            sx={{ml: 3}}
+            sx={{ml: 3, mb: 2}}
         >
           {data ? 
             data._id
@@ -78,6 +91,12 @@ const Election = () =>  {
             />
           }
         </Typography>
+        <Alert 
+          severity="info" 
+          width={100}
+        >
+          Recording your vote on the public blockchain may require upto 15secs! Please be patient and do not navigate while submitting
+        </Alert>
         <br/>
         <Grid
           container
@@ -94,6 +113,7 @@ const Election = () =>  {
               <CreateElection 
                 candidates={ data.candidates} 
                 _id={data._id} 
+                admin={admin}
               />
               :
               <SkeletonCard />

@@ -129,6 +129,11 @@ const Login = () => {
     }
   });
 
+  const handleLogout = () => {
+    localStorage.clear();
+    router.push('/login')
+  }
+
   return (
     <>
       <Head>
@@ -149,7 +154,7 @@ const Login = () => {
             passHref
           >
             <Button
-              component="a"
+              onClick={() => handleLogout()}
               startIcon={<ArrowBackIcon fontSize="small" />}
             >
               Login

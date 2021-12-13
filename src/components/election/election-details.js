@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -8,7 +8,7 @@ import {
   Divider,
   Grid,
   Snackbar,
-  Alert
+  Alert,
 } from '@mui/material';
 
 import InputLabel from '@mui/material/InputLabel';
@@ -23,8 +23,9 @@ import Web3 from 'web3';
 
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
-export const CreateElection = ({_id, candidates}) => {
+export const CreateElection = ({_id, candidates, admin}) => {
   const [voting, setvoting] = useState(false);
+  const [fetching, setFetching] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState();
   const [selected, setSelected] = useState('');
@@ -33,12 +34,10 @@ export const CreateElection = ({_id, candidates}) => {
     setSelected(event.target.value);
   };
 
-  const newf = async() => {
+  const getVoteCount = async() => {
+    setFetching(true);
     try {
       const web3 = new Web3(Web3.givenProvider || "http://localhost:8545")
-
-      // await window.ethereum.enable();
-      // const accounts = await web3.eth.getAccounts()
       
       const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS)
 
@@ -46,14 +45,20 @@ export const CreateElection = ({_id, candidates}) => {
 
       const electionContract = new web3.eth.Contract(SINGLE_CONTRACT_ABI, electionContractAddr);
 
-      let temp = await electionContract.methods.candidates(1).call();
-      console.log(temp)
+      let i;
+      let result = []
+      for(i=1; i<=candidates.length; i++) {
+        let temp = await electionContract.methods.candidates(i).call();
+        let new1 = (({ id, voteCount }) => ({ id, voteCount }))(temp);
+        result.push(JSON.stringify(new1));
+      } 
 
-      temp = await electionContract.methods.candidates(2).call();
-      console.log(temp)
+      setFetching(false);
+      alert(result)
 
     }catch(err) {
       console.log(err)
+      setFetching(false);
     }
   }
 
@@ -79,8 +84,8 @@ export const CreateElection = ({_id, candidates}) => {
 
       const electionContract = new web3.eth.Contract(SINGLE_CONTRACT_ABI, electionContractAddr);
 
-      const temp = await electionContract.methods.candidates(1).call();
-      console.log(temp)
+      // const temp = await electionContract.methods.candidates(1).call();
+      // console.log(temp)
 
       await electionContract.methods.vote((candidates.indexOf(selected) + 1))
       .send({
@@ -95,6 +100,34 @@ export const CreateElection = ({_id, candidates}) => {
   }
 
   return (
+    <>
+    {admin &&
+      <Card sx={{mb: 3}}>
+        <CardHeader
+          // subheader=""
+          title="Admin panel"
+        />
+        <Divider />
+        <CardContent>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              // p: 2
+            }}
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              disabled={fetching}
+              onClick={() => getVoteCount()}
+            >
+              Get vote count
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+      }
       <Card>
         <CardHeader
           subheader="Voting will require ether as a your vote will be stored on the ethereum network!"
@@ -168,7 +201,7 @@ export const CreateElection = ({_id, candidates}) => {
               severity="error" 
               sx={{ width: '100%', height: '100%' }}
             >
-              Something went wrong
+              Something went wrong! Seems like you have already voted 
             </Alert>
             :
             <Alert 
@@ -180,9 +213,7 @@ export const CreateElection = ({_id, candidates}) => {
             </Alert>
           }
         </Snackbar>
-        <Button onClick={() => newf()}>
-          Get data
-        </Button>
       </Card>
+    </>
   );
 };

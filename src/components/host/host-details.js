@@ -64,15 +64,24 @@ export const CreateElection = (props) => {
     const { title, description, tags, candidates } = values;
     const _candidates = candidates.split(',');
     const _tags = tags.split(',');
+    let token = localStorage.getItem("accessToken");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    };
+
     const res = await API.post('/elections',
     {
         title,
         description,
         creator: "Harshal",
-        phase: "registration",
+        phase: "voting",
         tags: _tags,
         candidates: _candidates
-    });
+    }, config
+    );
     console.log(res.data._id);
     await contract.methods.createElection(_candidates.length, res.data._id)
     .send({
