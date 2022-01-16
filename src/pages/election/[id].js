@@ -23,6 +23,37 @@ const Election = () =>  {
     fetchData(router.query.id);
   }, [router.isReady]);
 
+  // const refreshAccessToken = async() => {
+  //   let token = localStorage.getItem("refreshToken");
+  //   const config = {
+  //     headers: {
+  //       "Authorization": `Bearer ${token}`
+  //     },
+  //   };
+
+  //   try {
+  //     const res = await API.post(
+  //       `/refresh`,
+  //       {},
+  //       config
+  //     );
+  //     console.log('refresh success')
+  //     localStorage.removeItem("accessToken");
+  //     localStorage.setItem("accessToken", res.data.accessToken);
+  //     localStorage.removeItem("refreshToken");
+  //     localStorage.setItem("refreshToken", res.data.refreshToken);
+  //     fetchData(router.query.id)
+  //   }
+  //   catch(err) {
+  //     console.log('refresh fail')
+  //     if(err.response.status === 401) { 
+  //       localStorage.clear();
+  //       alert("Your session has expired");
+  //       router.push('/login')
+  //     }
+  //   }
+  // }
+
   const fetchData = async(eid) => {
     let token = localStorage.getItem("accessToken");
     const config = {
@@ -31,12 +62,25 @@ const Election = () =>  {
         "Authorization": `Bearer ${token}`
       },
     };
-    const res = await API.get(
-      `/elections/${eid}`,
-      config
-    );
-    setData(res.data.election);
-    setAdmin(res.data.isAdmin)
+    
+    try {
+      const res = await API.get(
+        `/elections/${eid}`,
+        config
+      );
+      console.log(res.data)
+      setData(res.data.election);
+      setAdmin(res.data.isAdmin)
+    }
+    catch (err) {
+      console.log('access fail')
+      if(err.response.status === 401) {
+        localStorage.clear();
+        alert("Your session has expired");
+        router.push('/login')
+        // refreshAccessToken();
+      }
+    }
   }
 
   return (

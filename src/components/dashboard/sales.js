@@ -1,7 +1,5 @@
 import { Bar } from 'react-chartjs-2';
 import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme } from '@mui/material';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 export const Sales = (props) => {
   const theme = useTheme();
@@ -14,22 +12,22 @@ export const Sales = (props) => {
         barThickness: 12,
         borderRadius: 4,
         categoryPercentage: 0.5,
-        data: [18, 5, 19, 27, 29, 19, 20],
-        label: 'This year',
-        maxBarThickness: 10
-      },
-      {
-        backgroundColor: '#EEEEEE',
-        barPercentage: 0.5,
-        barThickness: 12,
-        borderRadius: 4,
-        categoryPercentage: 0.5,
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: 'Last year',
+        data: [18, 10],
+        // label: 'This year',
         maxBarThickness: 10
       }
+      // {
+      //   backgroundColor: '#EEEEEE',
+      //   barPercentage: 0.5,
+      //   barThickness: 12,
+      //   borderRadius: 4,
+      //   categoryPercentage: 0.5,
+      //   data: [11],
+      //   label: 'Last year',
+      //   maxBarThickness: 10
+      // }
     ],
-    labels: ['1 Aug', '2 Aug', '3 Aug', '4 Aug', '5 Aug', '6 Aug', '7 aug']
+    labels: ['1 Aug', '2 Aug']
   };
 
   const options = {
@@ -86,19 +84,19 @@ export const Sales = (props) => {
       <CardHeader
         action={(
           <Button
-            endIcon={<ArrowDropDownIcon fontSize="small" />}
             size="small"
           >
-            Last 7 days
+            Get latest vote count
           </Button>
         )}
-        title="Latest Sales"
+        title="Vote count"
       />
       <Divider />
       <CardContent>
         <Box
           sx={{
-            height: 400,
+            height: 300,
+            maxWidth: 700,
             position: 'relative'
           }}
         >
@@ -108,22 +106,6 @@ export const Sales = (props) => {
           />
         </Box>
       </CardContent>
-      <Divider />
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          p: 2
-        }}
-      >
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon fontSize="small" />}
-          size="small"
-        >
-          Overview
-        </Button>
-      </Box>
     </Card>
   );
 };

@@ -15,6 +15,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+// import { Sales } from '../dashboard/sales';
 
 import { CONTRACT_ADDRESS, CONTRACT_ABI, SINGLE_CONTRACT_ABI } from '../../config';
 import axios from 'axios';
@@ -104,10 +105,10 @@ export const CreateElection = ({_id, candidates, admin}) => {
     {admin &&
       <Card sx={{mb: 3}}>
         <CardHeader
-          // subheader=""
           title="Admin panel"
         />
         <Divider />
+        {/* <Sales /> */}
         <CardContent>
           <Box
             sx={{

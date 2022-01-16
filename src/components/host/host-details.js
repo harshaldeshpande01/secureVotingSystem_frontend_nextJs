@@ -11,6 +11,7 @@ import {
   Snackbar,
   Alert
 } from '@mui/material';
+import { useRouter } from 'next/router'
 
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../../config';
 import axios from 'axios';
@@ -22,11 +23,13 @@ import * as Yup from 'yup';
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
 export const CreateElection = (props) => {
+  const router = useRouter();
   const [loading, setLoading] = useState();
   const [account, setAccount] = useState();
   const [contract, setContract] = useState();
   const [creating, setCreating] = useState(false);
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     loadBlockchainData();
@@ -72,24 +75,51 @@ export const CreateElection = (props) => {
       },
     };
 
-    const res = await API.post('/elections',
-    {
-        title,
-        description,
-        creator: "Harshal",
-        phase: "voting",
-        tags: _tags,
-        candidates: _candidates
-    }, config
-    );
-    console.log(res.data._id);
-    await contract.methods.createElection(_candidates.length, res.data._id)
-    .send({
-      from: account, 
-      gas: '5000000'
-    })
-    setCreating(false)
-    setOpen(true);
+    try {
+      const res = await API.post('/elections',
+      {
+          title,
+          description,
+          creator: "Harshal",
+          phase: "voting",
+          tags: _tags,
+          candidates: _candidates
+      }, config
+      );
+      try {
+        await contract.methods.createElection(_candidates.length, res.data._id)
+        .send({
+          from: account, 
+          gas: '5000000'
+        })
+        setCreating(false)
+        setOpen(true);
+      } catch(err) {
+        setCreating(false)
+        API.delete(
+          `/elections/${res.data._id}`, 
+          {
+            headers: {
+              "Authorization": `Bearer ${token}` 
+            }
+          }
+        )
+        setError(true)
+        setOpen(true)
+      }
+    }
+    catch(err) {
+      if(err.response.status === 401) {
+        localStorage.clear();
+        alert("Your session has expired");
+        router.push('/login')
+      }
+      else {
+        setCreating(false)
+        setError(true)
+        setOpen(true)
+      }
+    }
   }
   
   const formik = useFormik({
@@ -231,23 +261,44 @@ export const CreateElection = (props) => {
         </Box>
       </Card>
 
-      <Snackbar 
-        open={open} 
-        autoHideDuration={6000} 
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right"
-        }}
-      >
-        <Alert 
-          onClose={handleClose} 
-          severity="success" 
-          sx={{ width: '100%', height: '100%' }}
+      {
+        error?
+        <Snackbar 
+          open={open} 
+          autoHideDuration={6000} 
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
         >
-          Hosted successfully!
-        </Alert>
-      </Snackbar>
+          <Alert 
+            onClose={handleClose} 
+            severity="error" 
+            sx={{ width: '100%', height: '100%' }}
+          >
+            Election hosting failed! Initiated atomicity measures
+          </Alert>
+        </Snackbar>
+        :
+        <Snackbar 
+          open={open} 
+          autoHideDuration={6000} 
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right"
+          }}
+        >
+          <Alert 
+            onClose={handleClose} 
+            severity="success" 
+            sx={{ width: '100%', height: '100%' }}
+          >
+            Hosted successfully!
+          </Alert>
+        </Snackbar>
+      }
     </form>
   );
 };

@@ -103,6 +103,7 @@ const Login = () => {
         );
         localStorage.removeItem("accessToken");
         localStorage.setItem("accessToken", res.data.accessToken);
+        localStorage.setItem("refreshToken", res.data.refreshToken);
         localStorage.removeItem("hashOTP");
         router.push("/");
     } catch (error) {
@@ -177,6 +178,7 @@ const Login = () => {
               </Typography>
             </Box>
             <TextField
+              autoFocus
               error={Boolean(formik.touched.otp && formik.errors.otp)}
               fullWidth
               helperText={formik.touched.otp && formik.errors.otp}
