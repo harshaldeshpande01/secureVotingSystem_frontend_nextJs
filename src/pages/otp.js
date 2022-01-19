@@ -107,7 +107,8 @@ const Login = () => {
         localStorage.removeItem("hashOTP");
         router.push("/");
     } catch (error) {
-          setError(error.response.data);
+        console.log(error)
+          setError('Something went wrong');
           setOpen(true);
           setLoading(false);
       }  

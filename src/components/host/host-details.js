@@ -81,7 +81,7 @@ export const CreateElection = (props) => {
           title,
           description,
           creator: "Harshal",
-          phase: "voting",
+          phase: "registration",
           tags: _tags,
           candidates: _candidates
       }, config

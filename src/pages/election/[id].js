@@ -16,6 +16,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const Election = () =>  {
   const [data, setData] = useState();
   const [ admin, setAdmin ] = useState();
+  const [ phase, setPhase ] = useState();
+  const [ isRegistered, setIsRegistered] = useState();
   const router = useRouter();
 
   useEffect(() => {
@@ -55,6 +57,7 @@ const Election = () =>  {
   // }
 
   const fetchData = async(eid) => {
+    console.log(1)
     let token = localStorage.getItem("accessToken");
     const config = {
       headers: {
@@ -64,13 +67,17 @@ const Election = () =>  {
     };
     
     try {
+      console.log(2)
       const res = await API.get(
         `/elections/${eid}`,
         config
       );
+      console.log(3)
       console.log(res.data)
       setData(res.data.election);
       setAdmin(res.data.isAdmin)
+      setIsRegistered(res.data.isRegistered)
+      setPhase(res.data.election.phase)
     }
     catch (err) {
       console.log('access fail')
@@ -158,6 +165,8 @@ const Election = () =>  {
                 candidates={ data.candidates} 
                 _id={data._id} 
                 admin={admin}
+                isRegistered={isRegistered}
+                phase={phase}
               />
               :
               <SkeletonCard />

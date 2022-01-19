@@ -34,6 +34,7 @@ const Elections = () => {
   const router = useRouter();
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [elections, setElections] = useState();
+  const [loading, setLoading] = useState(false);
   const [count, setCount] = useState();
   const [current, setCurrent] = useState(1);
   const [search, setSearch] = useState('');
@@ -48,7 +49,7 @@ const Elections = () => {
   }, []);
 
   const fetchElections = async(page, search) => {
-    console.log(`Fectching ${page} and ${search}`)
+    setLoading(true);
     let token = localStorage.getItem("accessToken");
     const config = {
       headers: {
@@ -64,13 +65,14 @@ const Elections = () => {
       );
       setElections(res.data.data);
       setCount(res.data.numberOfPages);
+      setLoading(false);
     }
     catch(err) {
+      setLoading(false);
       if(err.response.status === 401) {
         localStorage.clear();
         alert("Your session has expired");
         router.push('/login')
-        // refreshAccessToken();
       }
     }
   }
@@ -202,7 +204,7 @@ const Elections = () => {
             spacing={3}
           >
             {
-                elections ?
+                (!loading && elections) ?
                 elections.map((election, _id) => {
                     return(
                         <Grid 
