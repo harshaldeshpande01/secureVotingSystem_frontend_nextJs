@@ -1,5 +1,17 @@
 import Head from 'next/head';
-import { DashboardLayout } from '../components/dashboard-layout';
+// import { DashboardLayout } from '../components/dashboard-layout';
+
+import dynamic from 'next/dynamic'
+
+// const CreateElection = dynamic(
+//   () => import('../components/host/host-details'),
+//   { ssr: false }
+// )
+
+const DashboardLayout = dynamic(
+  () => import('../components/dashboard-layout'),
+  { ssr: false }
+)
 
 const Dashboard = () => (
   <>

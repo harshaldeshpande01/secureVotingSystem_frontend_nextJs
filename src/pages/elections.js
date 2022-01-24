@@ -22,8 +22,15 @@ import NextLink from 'next/link';
 // import { ElectionListToolbar } from '../components/elections/election-list-toolbar';
 import { ElectionCard } from '../components/elections/election-card';
 import { SkeletonCard } from '../components/elections/skeleton-card';
-import { DashboardLayout } from '../components/dashboard-layout';
+// import { DashboardLayout } from '../components/dashboard-layout';
 import RefreshIcon from '@mui/icons-material/Refresh';
+
+import dynamic from 'next/dynamic'
+
+const DashboardLayout = dynamic(
+  () => import('../components/dashboard-layout'),
+  { ssr: false }
+)
 
 import axios from 'axios';
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });

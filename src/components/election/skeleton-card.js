@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   Box,
   Button,
@@ -8,8 +10,7 @@ import {
   Grid,
   Skeleton
 } from '@mui/material';
-
-export const SkeletonCard = () => {
+const SkeletonCard = () => {
 
   return (
       <Card>
@@ -51,3 +52,5 @@ export const SkeletonCard = () => {
       </Card>
   );
 };
+
+export default React.memo(SkeletonCard);

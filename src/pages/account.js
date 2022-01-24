@@ -1,8 +1,14 @@
 import Head from 'next/head';
 import { Box, Container, Grid, Typography, Alert } from '@mui/material';
-import { AccountProfile } from '../components/account/account-profile';
-import { AccountProfileDetails } from '../components/account/account-profile-details';
-import { DashboardLayout } from '../components/dashboard-layout';
+// import { AccountProfile } from '../components/account/account-profile';
+// import { AccountProfileDetails } from '../components/account/account-profile-details';
+
+import dynamic from 'next/dynamic'
+
+const DashboardLayout = dynamic(
+  () => import('../components/dashboard-layout'),
+  { ssr: false }
+)
 
 const Account = () => (
   <>

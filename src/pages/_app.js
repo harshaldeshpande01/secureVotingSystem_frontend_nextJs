@@ -36,3 +36,5 @@ const App = (props) => {
 };
 
 export default App;
+
+// ^12.0.3-canary.7

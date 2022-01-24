@@ -1,7 +1,20 @@
 import Head from 'next/head';
 import { Box, Container, Grid, Typography, Alert } from '@mui/material';
-import { CreateElection } from '../components/host/host-details';
-import { DashboardLayout } from '../components/dashboard-layout';
+// import { CreateElection } from '../components/host/host-details';
+// import { DashboardLayout } from '../components/dashboard-layout';
+
+import dynamic from 'next/dynamic'
+
+const CreateElection = dynamic(
+  () => import('../components/host/host-details'),
+  { ssr: false }
+)
+
+const DashboardLayout = dynamic(
+  () => import('../components/dashboard-layout'),
+  { ssr: false }
+)
+
 
 const Host = () => (
   <>
@@ -9,6 +22,10 @@ const Host = () => (
       <title>
         Host election | secure voting platform
       </title>
+      <meta
+        name="viewport"
+        content="initial-scale=1, width=device-width"
+      />
     </Head>
     <Box
       component="main"

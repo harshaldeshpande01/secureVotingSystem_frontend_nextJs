@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -22,7 +22,7 @@ import * as Yup from 'yup';
 
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 
-export const CreateElection = (props) => {
+const CreateElection = React.memo((props) => {
   const router = useRouter();
   const [loading, setLoading] = useState();
   const [account, setAccount] = useState();
@@ -301,4 +301,6 @@ export const CreateElection = (props) => {
       }
     </form>
   );
-};
+});
+
+export default CreateElection;

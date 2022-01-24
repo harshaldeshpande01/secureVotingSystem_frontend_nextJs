@@ -2,10 +2,23 @@ import Head from 'next/head';
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { Box, Container, Grid, Typography, Button, Skeleton, Alert } from '@mui/material';
-import { CreateElection } from '../../components/election/election-details';
-import { SkeletonCard } from '../../components/election/skeleton-card';
-import { DashboardLayout } from '../../components/dashboard-layout';
-import jwt_decode from "jwt-decode";
+
+import dynamic from 'next/dynamic'
+
+const DashboardLayout = dynamic(
+  () => import('../../components/dashboard-layout'),
+  { ssr: false }
+)
+
+const ElectionDetails = dynamic(
+  () => import('../../components/election/election-details'),
+  { ssr: false }
+)
+
+const SkeletonCard = dynamic(
+  () => import('../../components/election/skeleton-card'),
+  { ssr: false }
+)
 
 import axios from 'axios';
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
@@ -161,7 +174,7 @@ const Election = () =>  {
           > 
             {
               data ? 
-              <CreateElection 
+              <ElectionDetails 
                 candidates={ data.candidates} 
                 _id={data._id} 
                 admin={admin}

@@ -1,8 +1,15 @@
 import Head from 'next/head';
 import { Box, Container, Typography, Alert } from '@mui/material';
-import { DashboardLayout } from '../components/dashboard-layout';
-import { SettingsNotifications } from '../components/settings/settings-notifications';
-import { SettingsPassword } from '../components/settings/settings-password';
+// import { DashboardLayout } from '../components/dashboard-layout';
+// import { SettingsNotifications } from '../components/settings/settings-notifications';
+// import { SettingsPassword } from '../components/settings/settings-password';
+
+import dynamic from 'next/dynamic'
+
+const DashboardLayout = dynamic(
+  () => import('../components/dashboard-layout'),
+  { ssr: false }
+)
 
 const Settings = () => (
   <>

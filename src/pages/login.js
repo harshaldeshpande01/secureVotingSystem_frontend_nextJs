@@ -6,6 +6,15 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Container, Snackbar, Alert, Link, TextField, Typography , Stack} from '@mui/material';
 import ReCAPTCHA from "react-google-recaptcha";
+
+// import dynamic from 'next/dynamic'
+
+// const ReCAPTCHA = dynamic(() => import('react-google-recaptcha'), {
+//   ssr: false
+// });
+// const ReCAPTCHA = dynamic(() => import('react-leaflet/lib/Map'), {
+//   ssr: false
+// });
 import axios from "axios";
 
 import withAuth from '../hoc/withAuth'
@@ -83,6 +92,10 @@ const Login = () => {
     <>
       <Head>
         <title>Login | secure voting platform</title>
+        <meta
+          name="viewport"
+          content="initial-scale=1, width=device-width"
+        />
       </Head>
       <Box
         component="main"

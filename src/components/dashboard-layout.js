@@ -16,7 +16,7 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   }
 }));
 
-export const DashboardLayout = withAuth2((props) => {
+const DashboardLayout = withAuth2((props) => {
   const { children } = props;
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
@@ -42,3 +42,5 @@ export const DashboardLayout = withAuth2((props) => {
     </>
   );
 });
+
+export default DashboardLayout;
