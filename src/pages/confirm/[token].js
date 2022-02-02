@@ -67,22 +67,36 @@ const Confirm = React.memo(() => {
                 <CircularProgress/> 
             </div>
         :
-            <Container component="main" maxWidth="xs">
+            <Container 
+              component="main" 
+              maxWidth="xs"
+            >
             <CssBaseline />
             <div style={{marginTop: '6em', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 {
                     error &&
-                    <Typography component="h1" variant="h5" gutterBottom>
+                    <Typography 
+                      component="h1" 
+                      variant="h5" 
+                      gutterBottom
+                    >
                         Something went wrong &#x1F915;
                     </Typography>
                 }
                 {
                     success &&
                     <>
-                        <Typography component="h1" variant="h5" gutterBottom>
+                        <Typography 
+                          component="h1" 
+                          variant="h5" 
+                          gutterBottom
+                        >
                             Email verified succesfully &#x1F389;
                         </Typography>
-                        <Link href="/login" variant="body2">
+                        <Link 
+                          href="/login" 
+                          variant="body2"
+                        >
                             {"Login to access your account"}
                         </Link>
                     </>
