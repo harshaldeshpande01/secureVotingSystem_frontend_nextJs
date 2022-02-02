@@ -38,7 +38,7 @@ export const Admin = ({_id, phase, candidates}) => {
         config
       );
       setChangingPhase(false);
-      console.log(res)
+      // console.log(res)
       Router.reload(window.location.pathname);
     }
     catch(err) {

@@ -16,6 +16,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+import axios from 'axios';
+
+const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
+
 import { CONTRACT_ADDRESS, CONTRACT_ABI, SINGLE_CONTRACT_ABI } from '../../config';
 import Web3 from 'web3';
 
@@ -79,14 +83,32 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
 
       const electionContract = new web3.eth.Contract(SINGLE_CONTRACT_ABI, electionContractAddr);
 
-      // const temp = await electionContract.methods.candidates(1).call();
-      // console.log(temp)
-
-      await electionContract.methods.vote((candidates.indexOf(selected) + 1))
+      const response = await electionContract.methods.vote((candidates.indexOf(selected) + 1))
       .send({
         from: accounts[0], 
         gas: '5000000'
       })
+
+      let token = localStorage.getItem("accessToken");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+      };
+
+      try {
+        await API.post('/voteConfirmed', 
+          {
+            "txn": response.transactionHash
+          },
+          config
+        );
+      } catch(err) {
+        console.log(err)
+      }
+      console.log(response.transactionHash);
+
     } catch(err) {
       setError(err)
     }
@@ -218,7 +240,7 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
               severity="success" 
               sx={{ width: '100%', height: '100%' }}
             >
-              Vote recorded successfully!
+              Vote recorded successfully! Check your inbox for transaction details
             </Alert>
           }
         </Snackbar>

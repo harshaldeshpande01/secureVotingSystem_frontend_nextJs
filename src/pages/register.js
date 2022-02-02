@@ -67,7 +67,6 @@ const Register = () => {
         config
       );
       setLoading(false);
-      console.log(res.data.data);
       setError('');
       setOpen(true)
     } catch (error) {

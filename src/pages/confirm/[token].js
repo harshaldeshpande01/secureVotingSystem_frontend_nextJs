@@ -29,17 +29,14 @@ const Confirm = React.memo(() => {
     };
     try {
         const token = router.query.token;
-        console.log(token);
         const { data } = await axios.put(
           `${process.env.NEXT_PUBLIC_AUTH_LEVEL1}/confirmation/${token}`,
           {},
           config
         );
         setLoading(false);
-        console.log(data)
         setSuccess(data.data);
       } catch (error) {
-        console.log(error)
         setError(error.response.data);
         setLoading(false);
       }

@@ -26,10 +26,6 @@ export const VoterRegistration = ({_id, phase}) => {
         "Authorization": `Bearer ${token}`
       },
     };
-
-
-    console.log(`Sending req to /register/${_id}`)
-    console.log(token)
     try {
       const res = await API.post(
         `/register/${_id}`,
@@ -39,7 +35,6 @@ export const VoterRegistration = ({_id, phase}) => {
         config
       );
       setRegistering(false);
-      console.log(res)
       Router.reload(window.location.pathname);
     }
     catch(err) {

@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { Box, Container, Typography, Alert } from '@mui/material';
 // import { DashboardLayout } from '../components/dashboard-layout';
-// import { SettingsNotifications } from '../components/settings/settings-notifications';
-// import { SettingsPassword } from '../components/settings/settings-password';
+import { SettingsNotifications } from '../components/settings/settings-notifications';
+import { SettingsPassword } from '../components/settings/settings-password';
 
 import dynamic from 'next/dynamic'
 
@@ -38,10 +38,10 @@ const Settings = () => (
         >
           Page under development. Fully pending!
         </Alert>
-        {/* <SettingsNotifications />
+        <SettingsNotifications />
         <Box sx={{ pt: 3 }}>
           <SettingsPassword />
-        </Box> */}
+        </Box>
       </Container>
     </Box>
   </>

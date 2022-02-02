@@ -18,11 +18,11 @@ const items = [
     icon: (<ShoppingBagIcon fontSize="small" />),
     title: 'Host election'
   },
-  {
-    href: '/account',
-    icon: (<UserIcon fontSize="small" />),
-    title: 'Account'
-  },
+  // {
+  //   href: '/account',
+  //   icon: (<UserIcon fontSize="small" />),
+  //   title: 'Account'
+  // },
   {
     href: '/settings',
     icon: (<CogIcon fontSize="small" />),

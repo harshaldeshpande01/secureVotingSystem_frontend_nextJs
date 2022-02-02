@@ -8,7 +8,7 @@ import {
   Divider,
   FormControlLabel,
   Grid,
-  Typography
+  // Typography
 } from '@mui/material';
 
 export const SettingsNotifications = (props) => (
@@ -35,13 +35,13 @@ export const SettingsNotifications = (props) => (
             }}
             xs={12}
           >
-            <Typography
+            {/* <Typography
               color="textPrimary"
               gutterBottom
               variant="h6"
             >
               Notifications
-            </Typography>
+            </Typography> */}
             <FormControlLabel
               control={(
                 <Checkbox
@@ -49,9 +49,9 @@ export const SettingsNotifications = (props) => (
                   defaultChecked
                 />
               )}
-              label="Email"
+              label="Email notifications"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={(
                 <Checkbox
                   color="primary"
@@ -72,9 +72,9 @@ export const SettingsNotifications = (props) => (
                 />
               )}
               label="Phone calls"
-            />
+            /> */}
           </Grid>
-          <Grid
+          {/* <Grid
             item
             md={4}
             sm={6}
@@ -113,7 +113,7 @@ export const SettingsNotifications = (props) => (
               )}
               label="Phone calls"
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </CardContent>
       <Divider />
