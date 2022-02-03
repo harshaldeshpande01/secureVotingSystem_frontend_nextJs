@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -15,9 +15,21 @@ const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 import { CONTRACT_ADDRESS, CONTRACT_ABI, SINGLE_CONTRACT_ABI } from '../../config';
 import Web3 from 'web3';
 
+import LinearProgress from '@mui/material/LinearProgress';
+import { Bar } from 'react-chartjs-2';
+
+
 export const Admin = ({_id, phase, candidates}) => {
+  // console.log(candidates);
   const [fetching, setFetching] = useState(false);
   const [changingPhase, setChangingPhase] = useState(false);
+  const [votes, setVotes] = useState();
+
+  useEffect(() => {
+    if(phase != 'registration') {
+      getVoteCount();
+    }
+  }, [phase]);
 
   const startVotingPhase = async() => {
     setChangingPhase(true);
@@ -91,16 +103,38 @@ export const Admin = ({_id, phase, candidates}) => {
       for(i=1; i<=candidates.length; i++) {
         let temp = await electionContract.methods.candidates(i).call();
         let new1 = (({ id, voteCount }) => ({ id, voteCount }))(temp);
-        result.push(JSON.stringify(new1));
+        result.push(new1.voteCount);
       } 
 
       setFetching(false);
-      alert(result)
+      setVotes(result);
 
     }catch(err) {
       console.log(err)
       setFetching(false);
     }
+  }
+
+  var data = {
+    labels: candidates.map(x => x),
+    datasets: [{
+      label: `Candidate wise vote count`,
+      data: votes?.map(x => x),
+      backgroundColor: [
+        'rgba(54, 162, 235, 0.2)'
+      ],
+    }]
+  };
+
+  var options = {
+    maintainAspectRatio: false,
+    scales: {
+    },
+    legend: {
+      labels: {
+        fontSize: 25,
+      },
+    },
   }
 
   return (
@@ -135,6 +169,7 @@ export const Admin = ({_id, phase, candidates}) => {
     }
     { 
       (phase == 'voting') &&
+      <>
       <Card sx={{mb: 3}}>
         <CardHeader
           title="Admin panel"
@@ -150,26 +185,43 @@ export const Admin = ({_id, phase, candidates}) => {
             </Button>
           }
         />
+      </Card>
+
+      <Card sx={{mb: 3}}>
+        <CardHeader
+          title="Live vote count"
+          action={
+            <Button
+                variant="contained" 
+                color="primary"
+                disabled={fetching}
+                onClick={() => getVoteCount()}
+            >
+              Update
+            </Button>
+          }
+        />
         <Divider />
         <CardContent>
+        {
+          fetching?
+          <LinearProgress />
+          :
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              // p: 2
+              maxWidth: 650
             }}
           >
-            <Button
-              color="primary"
-              variant="contained"
-              disabled={fetching}
-              onClick={() => getVoteCount()}
-            >
-              Get vote count
-            </Button>
+              <Bar
+                data={data}
+                height={400}
+                options={options}
+              />
           </Box>
+        }
         </CardContent>
       </Card>
+      </>
     }
     { 
       (phase == 'results') &&
@@ -180,22 +232,22 @@ export const Admin = ({_id, phase, candidates}) => {
         />
         <Divider />
         <CardContent>
+        {
+          fetching?
+          <LinearProgress />
+          :
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              // p: 2
+              maxWidth: 650
             }}
           >
-            <Button
-              color="primary"
-              variant="contained"
-              disabled={fetching}
-              onClick={() => getVoteCount()}
-            >
-              View results
-            </Button>
+              <Bar
+                data={data}
+                height={400}
+                options={options}
+              />
           </Box>
+        }
         </CardContent>
       </Card>
     }

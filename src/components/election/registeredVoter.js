@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -16,6 +16,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+import LinearProgress from '@mui/material/LinearProgress';
+import { Bar } from 'react-chartjs-2';
+
 import axios from 'axios';
 
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
@@ -29,6 +32,13 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
   const [error, setError] = useState();
   const [selected, setSelected] = useState('');
   const [fetching, setFetching] = useState(false);
+  const [votes, setVotes] = useState();
+
+  useEffect(() => {
+    if(phase == 'results') {
+      getVoteCount();
+    }
+  }, [phase]);
 
   const getVoteCount = async() => {
     setFetching(true);
@@ -46,11 +56,11 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
       for(i=1; i<=candidates.length; i++) {
         let temp = await electionContract.methods.candidates(i).call();
         let new1 = (({ id, voteCount }) => ({ id, voteCount }))(temp);
-        result.push(JSON.stringify(new1));
+        result.push(new1.voteCount);
       } 
 
       setFetching(false);
-      alert(result)
+      setVotes(result);
 
     }catch(err) {
       console.log(err)
@@ -114,6 +124,28 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
     }
     setvoting(false)
     setOpen(true)
+  }
+
+  var data = {
+    labels: candidates.map(x => x),
+    datasets: [{
+      label: `Candidate wise vote count`,
+      data: votes?.map(x => x),
+      backgroundColor: [
+        'rgba(54, 162, 235, 0.2)'
+      ]
+    }]
+  };
+
+  var options = {
+    maintainAspectRatio: false,
+    scales: {
+    },
+    legend: {
+      labels: {
+        fontSize: 25,
+      },
+    },
   }
 
   return (
@@ -189,22 +221,22 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
             />
             <Divider />
             <CardContent>
-            <Box
+            {
+              fetching?
+              <LinearProgress />
+              :
+              <Box
                 sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                // p: 2
+                  maxWidth: 650
                 }}
-            >
-                <Button
-                color="primary"
-                variant="contained"
-                disabled={fetching}
-                onClick={() => getVoteCount()}
-                >
-                View results
-                </Button>
-            </Box>
+              >
+                  <Bar
+                    data={data}
+                    height={400}
+                    options={options}
+                  />
+              </Box>
+            }
             </CardContent>
         </Card>
     }

@@ -29,7 +29,7 @@ const SkeletonCard = () => {
               md={8}
               xs={12}
             >
-              <Skeleton fullWidth/>
+              <Skeleton/>
             </Grid>
           </Grid>
         </CardContent>

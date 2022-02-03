@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import styled from '@emotion/styled';
@@ -85,6 +85,6 @@ export const DashboardNavbar = (props) => {
   );
 };
 
-DashboardNavbar.propTypes = {
-  onSidebarOpen: PropTypes.func
-};
+// DashboardNavbar.propTypes = {
+//   onSidebarOpen: PropTypes.func
+// };

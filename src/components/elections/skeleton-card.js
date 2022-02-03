@@ -19,7 +19,7 @@ export const SkeletonCard = () => {
       >
           <Skeleton 
             variant="rectangular" 
-            fullWidth
+            // fullWidth
           />
       </Typography>
       <Typography
@@ -29,7 +29,7 @@ export const SkeletonCard = () => {
       >
         <Skeleton 
             variant="rectangular" 
-            fullWidth
+            // fullWidth
         />
       </Typography>
     </CardContent>
