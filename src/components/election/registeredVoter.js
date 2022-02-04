@@ -26,7 +26,8 @@ const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
 import { CONTRACT_ADDRESS, CONTRACT_ABI, SINGLE_CONTRACT_ABI } from '../../config';
 import Web3 from 'web3';
 
-export const RegisteredVoter = ({_id, candidates, phase}) => {
+export const RegisteredVoter = ({_id, candidates, phase, voted}) => {
+  console.log(voted);
   const [voting, setvoting] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState();
@@ -106,6 +107,22 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
           "Authorization": `Bearer ${token}`
         },
       };
+      const res = await API.post(
+        `/setAlreadyVoted/${_id}`,
+        {
+          "registering": true
+        },
+        config
+      );
+      console.log(res);
+
+      // let token = localStorage.getItem("accessToken");
+      // const config = {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     "Authorization": `Bearer ${token}`
+      //   },
+      // };
 
       try {
         await API.post('/voteConfirmed', 
@@ -151,7 +168,7 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
   return (
     <>
     {
-      (phase == 'voting') &&
+      (phase == 'voting') && (voted == false) &&
       <Card>
         <CardHeader
           subheader="Voting will require ether as a your vote will be stored on the ethereum network!"
@@ -210,6 +227,15 @@ export const RegisteredVoter = ({_id, candidates, phase}) => {
             Submit Vote
           </Button>
         </Box>
+      </Card>
+    }
+    {
+      (phase == 'voting') && (voted == true) &&
+      <Card>
+        <CardHeader
+          subheader="You have already voted in this election and your vote has been recorded succesfully. Please stay tuned for the results!"
+          title="You have submitted your vote"
+        />
       </Card>
     }
     {

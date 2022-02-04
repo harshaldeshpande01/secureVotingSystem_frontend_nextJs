@@ -197,7 +197,7 @@ export const Admin = ({_id, phase, candidates}) => {
                 disabled={fetching}
                 onClick={() => getVoteCount()}
             >
-              Update
+              Refresh
             </Button>
           }
         />

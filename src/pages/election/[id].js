@@ -31,6 +31,7 @@ const Election = () =>  {
   const [ admin, setAdmin ] = useState();
   const [ phase, setPhase ] = useState();
   const [ isRegistered, setIsRegistered] = useState();
+  const [ voted, setVoted ] = useState();
   const router = useRouter();
 
   useEffect(() => {
@@ -57,6 +58,7 @@ const Election = () =>  {
       setAdmin(res.data.isAdmin)
       setIsRegistered(res.data.isRegistered)
       setPhase(res.data.election.phase)
+      setVoted(res.data.alreadyVoted)
     }
     catch (err) {
       if(err.response.status === 401) {
@@ -145,6 +147,7 @@ const Election = () =>  {
                 admin={admin}
                 isRegistered={isRegistered}
                 phase={phase}
+                voted={voted}
               />
               :
               <SkeletonCard />

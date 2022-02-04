@@ -3,7 +3,7 @@ import { Admin } from './admin'
 import { RegisteredVoter } from './registeredVoter';
 import { VoterRegistration } from './voterRegistration';
 
-const ElectionDetails = ({_id, candidates, admin, isRegistered, phase}) => {
+const ElectionDetails = ({_id, candidates, admin, isRegistered, phase, voted}) => {
   return (
     <>
     {
@@ -20,6 +20,7 @@ const ElectionDetails = ({_id, candidates, admin, isRegistered, phase}) => {
         _id={_id} 
         phase={phase}
         candidates={candidates}
+        voted={voted}
       />
     }
     {
