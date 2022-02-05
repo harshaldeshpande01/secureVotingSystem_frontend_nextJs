@@ -15,10 +15,11 @@ const ElectionDetails = dynamic(
   { ssr: false }
 )
 
-const SkeletonCard = dynamic(
-  () => import('../../components/election/skeleton-card'),
-  { ssr: false }
-)
+import SkeletonCard from '../../components/election/skeleton-card'
+// const SkeletonCard = dynamic(
+//   () => import('../../components/election/skeleton-card'),
+//   { ssr: false }
+// )
 
 import axios from 'axios';
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_VOTING_SERVICE });
@@ -114,7 +115,7 @@ const Election = () =>  {
             sx={{ml: 3, mb: 2}}
         >
           {data ? 
-            data._id
+            data.description
             :
             <Skeleton 
               variant="rectangular" 
