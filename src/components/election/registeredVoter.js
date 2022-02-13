@@ -27,7 +27,7 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI, SINGLE_CONTRACT_ABI } from '../../confi
 import Web3 from 'web3';
 
 export const RegisteredVoter = ({_id, candidates, phase, voted}) => {
-  console.log(voted);
+  // console.log(voted);
   const [voting, setvoting] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState();
@@ -114,7 +114,7 @@ export const RegisteredVoter = ({_id, candidates, phase, voted}) => {
         },
         config
       );
-      console.log(res);
+      // console.log(res);
 
       // let token = localStorage.getItem("accessToken");
       // const config = {
@@ -134,7 +134,7 @@ export const RegisteredVoter = ({_id, candidates, phase, voted}) => {
       } catch(err) {
         console.log(err)
       }
-      console.log(response.transactionHash);
+      // console.log(response.transactionHash);
 
     } catch(err) {
       setError(err)
