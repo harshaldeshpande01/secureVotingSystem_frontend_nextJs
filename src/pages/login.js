@@ -91,7 +91,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | secure voting platform</title>
+        <title>Sign In | secure voting platform</title>
         <meta
           name="viewport"
           content="initial-scale=1, width=device-width"
